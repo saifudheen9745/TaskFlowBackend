@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, json } from "express";
 import { loginHelper, regiterHelper } from "../helpers/authHelper";
 import { userAuthResponse, userRegiterDetails } from "../Types/user.types";
 import { createNewAccessToken, createToken } from "../jwt/jwt";
@@ -10,24 +10,23 @@ export const userRegister = async (req: Request, res: Response) => {
       const accessToken: string = (await createToken(
         dbResponse._id,
         process.env.JWT_ACCESS_SECRET as string,
-        "30m"
+        "15m"
       )) as string;
       const refreshToken: string = (await createToken(
         dbResponse._id,
         process.env.JWT_REFRESH_SECRET as string,
-        "1d"
+        "10d"
       )) as string;
-      res.cookie("jwtRefreshToken", refreshToken);
+      res.cookie("jwtRefreshToken", refreshToken, {httpOnly:true});
       res.status(201).json({
         name: dbResponse?.name,
         accessToken: accessToken,
         email: dbResponse?.email,
-        isActive: dbResponse?.isActive,
         userId: dbResponse?._id,
       });
     }
-  } catch (error) {
-    res.status(400).json(error);
+  } catch (error:any) {
+    res.status(409).json({ error: error.toString().split(":")[1] });
   }
 };
 
@@ -38,24 +37,23 @@ export const userLogin = async (req: Request, res: Response) => {
       const accessToken: string = (await createToken(
         dbResponse._id,
         process.env.JWT_ACCESS_SECRET as string,
-        "30s"
+        "15m"
       )) as string;
       const refreshToken: string = (await createToken(
         dbResponse._id,
         process.env.JWT_REFRESH_SECRET as string,
-        "1d"
+        "10d"
       )) as string;
-      res.cookie("jwtRefreshToken", refreshToken);
+      res.cookie("jwtRefreshToken", refreshToken,{httpOnly:true});
       res.status(201).json({
         name: dbResponse?.name,
         accessToken: accessToken,
         email: dbResponse?.email,
-        isActive: dbResponse?.isActive,
         userId: dbResponse?._id,
       });
     }
-  } catch (error) {
-    res.status(401).json({ error });
+  } catch (error:any) {
+    res.status(401).json({ "error":error.toString().split(':')[1]});
   }
 };
 

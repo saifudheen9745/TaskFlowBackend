@@ -23,7 +23,6 @@ export const loginUser = async(loginDetails:{email:string,password:string})=>{
             if(isCorrectPassword){
                 return isUserExist
             }else{
-                console.log('asdf');
                 throw new Error("Invalid credentials")
             }
         }else{

@@ -48,7 +48,7 @@ export const createNewAccessToken = async (refreshToken: string) => {
       );
       const userId: string = isValidToken.userId;
       return sign({ userId }, process.env.JWT_ACCESS_SECRET as string, {
-        expiresIn: "30m",
+        expiresIn: "15m",
       });
     } else {
       throw new Error("No refresh token found");

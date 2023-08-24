@@ -7,6 +7,8 @@ import * as bodyParser from "body-parser";
 import { ConnectToDatabase } from "./connection/connection";
 
 import authRoute from './routes/authRoute'
+import userRoute from './routes/userRoute'
+import taskRoute from './routes/taskRoute'
 
 const app:Application = express()
 
@@ -29,6 +31,8 @@ app.use(express.json());
 ConnectToDatabase()
 
 app.use('/',authRoute)
+app.use('/user',userRoute)
+app.use('/task',taskRoute)
 
 app.listen(process.env.PORT,()=>{
     console.log(`Server started successfully on port ${process.env.PORT}`)

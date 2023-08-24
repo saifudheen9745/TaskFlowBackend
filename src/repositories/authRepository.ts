@@ -19,6 +19,9 @@ export const loginUser = async(loginDetails:{email:string,password:string})=>{
     try {
         const isUserExist = await authModel.findOne({email:loginDetails.email})
         if(isUserExist){
+            if(!isUserExist.isActive){
+                throw new Error("Blocked by admin")
+            }
             const isCorrectPassword:boolean = await compare(loginDetails?.password,isUserExist?.password) 
             if(isCorrectPassword){
                 return isUserExist
